@@ -1,60 +1,83 @@
 # Human Pose Estimation
 
-A real-time human pose estimation demo built with **MediaPipe Pose Landmarker** and browser camera APIs. It detects body landmarks from a live webcam stream, draws a connected human skeleton, and estimates selected joint angles.
+A simple real-time human pose estimation project. It detects body landmarks from a webcam and draws a connected skeleton over the video.
+
+The repository includes two ways to run it:
+- **Browser demo:** open the hosted page and allow camera access. It uses MediaPipe Tasks Vision in the browser.
+- **Python application:** run the OpenCV + MediaPipe script on your computer.
 
 ## Live demo
 
-After deployment, open the hosted website over HTTPS and allow camera access.
+The live demo will be added after deployment.
 
 ## Features
 
-- Real-time pose detection from a webcam
-- Body landmark and skeleton visualization
-- Support for detecting up to two people
-- Estimated left/right elbow and knee angles
-- Pose count, visible landmark count, frame count, and approximate processing FPS
-- Start, stop, and reset controls
-- Responsive interface for desktop and mobile screens
-- Camera frames are processed in the browser and are not uploaded by this application
+- Real-time body pose detection from a webcam.
+- Skeleton visualization with connected body landmarks.
+- Detection of up to two people in the browser demo.
+- Live counts for detected poses and visible landmarks.
+- Estimated left/right elbow and knee angles.
+- Start, stop, and reset controls.
+- Camera frames are processed locally in the browser; this project does not upload or store them.
 
-## Technology
+## Technologies
 
+- Python 3.10 or 3.11
+- OpenCV
+- MediaPipe
 - HTML, CSS, and JavaScript
-- MediaPipe Tasks Vision — Pose Landmarker
-- Browser MediaDevices API for webcam access
-- Canvas API for drawing landmarks and skeleton connections
+- MediaPipe Tasks Vision (browser demo)
 
-## Run locally
+## Run the browser demo locally
 
-1. Download or clone this repository.
+1. Clone or download this repository.
 2. Open a terminal in the project folder.
-3. Start a local web server. For example:
+3. Start a local web server:
 
    ```bash
    python -m http.server 8000
    ```
 
-4. Open `http://localhost:8000` in a modern browser.
+4. Visit `http://localhost:8000`.
 5. Select **Start camera** and allow camera access.
 
-A local server is recommended because browsers restrict camera access on insecure pages. HTTPS is required when using the deployed version.
+A local server is recommended because browsers normally require HTTPS or localhost for camera access.
+
+## Run the Python application
+
+1. Install Python 3.10 or 3.11.
+2. Install the dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the application:
+
+   ```bash
+   python pose_estimation.py
+   ```
+
+4. Stand where your upper and lower body are visible to the camera.
+5. Press `q` or `Esc` to close the application.
+
+The Python application uses your default webcam. If needed, change `cv2.VideoCapture(0)` to another camera index in `pose_estimation.py`.
 
 ## How it works
 
-1. The browser requests permission to use the webcam.
-2. MediaPipe Pose Landmarker loads its pretrained pose model.
-3. Each available video frame is passed to the model.
-4. The model returns body landmarks for detected people.
-5. Canvas draws the pose connections and landmark points over the video.
-6. Selected joint angles are estimated from the 2D coordinates of three landmarks.
+1. OpenCV reads frames from the webcam.
+2. Each frame is converted from BGR to RGB.
+3. MediaPipe's pretrained Pose model detects body landmarks.
+4. OpenCV draws the detected landmarks and skeleton connections.
+5. The program calculates approximate elbow and knee angles from landmark coordinates.
 
 ## Notes and limitations
 
 - This project uses a pretrained model. It does not train a new neural network.
-- Angle values are 2D estimates and can change with camera position and body orientation.
-- Detection quality depends on lighting, camera quality, and whether the person's body is visible.
-- The first launch requires an internet connection to load MediaPipe and its model files.
-- GPU acceleration is requested first. Browser or device compatibility may affect performance.
+- Detection quality depends on lighting, camera quality, distance, and body visibility.
+- Joint angles are approximate 2D estimates. Camera angle and body orientation can affect them.
+- The browser demo needs an internet connection on first load to download the MediaPipe library and model.
+- Camera access requires permission. The hosted demo must use HTTPS.
 
 ## Repository
 
